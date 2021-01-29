@@ -8,7 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFF</color>
     <color name="colorPrincipal">#093075</color>
-    <color name="green">#179309</color>
-    <color name="Boton">#0F9521</color>
+    <color name="colorFondo">#27272B</color>
+    <color name="navBar">#1097BF</color>
+    <color name="Boton">#097BD1</color>
     <color name="eraseTask">#D80909</color>
 </resources>
