@@ -2,6 +2,7 @@ package com.example.miprimeraapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,7 +14,9 @@ class MainActivity : AppCompatActivity() {
     // lateinit var example: String
     // Button porque la etiqueta de añadir tarea es Button
     lateinit var btnAddTask:Button
+    lateinit var btnOrderTasks:Button
     lateinit var etTask:EditText
+    var isOrderDescending: Boolean = true
     // El recyclerView se va a usar para las listas de tareas
     lateinit var rvTasks:RecyclerView
     lateinit var adapter:TaskAdapter
@@ -51,8 +54,13 @@ class MainActivity : AppCompatActivity() {
     // Los listener son los encargados de decirle a la clase
     // que alguien ha pulsado un botón, y que haga algo
     private fun initListeners() {
+
         btnAddTask.setOnClickListener{
             addTask()
+        }
+
+        btnOrderTasks.setOnClickListener {
+            orderTasks()
         }
     }
 
@@ -69,9 +77,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun orderTasks() {
+
+        if (isOrderDescending) {
+            tasks.sort()
+            isOrderDescending = false
+        }
+        else {
+            tasks.sortDescending()
+            isOrderDescending = true
+        }
+        adapter.notifyDataSetChanged()
+    }
+
     private fun initView() {
         // Conectamos las vistas
         btnAddTask = findViewById(R.id.btnAddTask)
+        btnOrderTasks = findViewById(R.id.btnOrderTask)
         etTask = findViewById(R.id.etTask)
         rvTasks = findViewById(R.id.rvTasks)
     }

@@ -11,5 +11,6 @@
     <color name="colorFondo">#27272B</color>
     <color name="navBar">#1097BF</color>
     <color name="Boton">#097BD1</color>
-    <color name="eraseTask">#D80909</color>
+    <color name="eraseTask">#F64646</color>
+    <color name="orderTask">#458E48</color>
 </resources>
