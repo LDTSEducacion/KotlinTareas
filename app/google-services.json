@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "544986959560",
+    "project_id": "apptareas-6f1d7",
+    "storage_bucket": "apptareas-6f1d7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:544986959560:android:29dbf8dc16809d91045ffd",
+        "android_client_info": {
+          "package_name": "com.example.miprimeraapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "544986959560-g2j2clva3brndh66vgi1rkvcbahr98qh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9hZgQpiOXVsopuvRFGb4wCaV8esPmdIM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544986959560-g2j2clva3brndh66vgi1rkvcbahr98qh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

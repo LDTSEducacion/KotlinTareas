@@ -8,6 +8,8 @@ import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.miprimeraapp.TaskApplication.Companion.prefs
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
@@ -72,6 +74,11 @@ class MainActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
             etTask.setText("")
             prefs.saveTasks(tasks)
+
+            val database = Firebase.database
+            val myRef = database.getReference("tareas")
+            myRef.push().setValue(taskToAdd)
+
         } else {
             etTask.setText("")
         }
