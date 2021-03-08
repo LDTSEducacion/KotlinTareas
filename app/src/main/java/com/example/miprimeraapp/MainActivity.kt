@@ -2,14 +2,17 @@ package com.example.miprimeraapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.miprimeraapp.TaskApplication.Companion.prefs
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlin.text.StringBuilder
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,6 +26,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var rvTasks:RecyclerView
     lateinit var adapter:TaskAdapter
     var tasks = mutableListOf<String>()
+
+    // FIREBASE
+    private lateinit var database: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,8 +46,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
+
         // Configura el RecyclerView y le añade el adapter
-        tasks = prefs.getTasks()
         rvTasks.layoutManager = LinearLayoutManager(this)
         adapter = TaskAdapter(tasks) {deleteTask(it)}
         rvTasks.adapter = adapter
@@ -64,20 +70,41 @@ class MainActivity : AppCompatActivity() {
         btnOrderTasks.setOnClickListener {
             orderTasks()
         }
+
+        val getData = object : ValueEventListener {
+
+            override fun onCancelled(databaseError: DatabaseError) {
+
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                //var sb:StringBuilder = StringBuilder()
+                for (i in snapshot.children) {
+                    var txt = i.child("texto").getValue().toString()
+                    //sb.append("${i.key} $txt")
+                    tasks.add(txt)
+                }
+            }
+        }
+        database.addValueEventListener(getData)
+        database.addListenerForSingleValueEvent(getData)
     }
 
     private fun addTask() {
         val taskToAdd:String = etTask.text.toString()
         
         if ((taskToAdd.length > 0 && taskToAdd.length <= 28)) {
-            tasks.add(taskToAdd)
-            adapter.notifyDataSetChanged()
-            etTask.setText("")
-            prefs.saveTasks(tasks)
+//            tasks.add(taskToAdd)
+//            adapter.notifyDataSetChanged()
+//            etTask.setText("")
+//            prefs.saveTasks(tasks)
 
-            val database = Firebase.database
-            val myRef = database.getReference("tareas")
-            myRef.push().setValue(taskToAdd)
+//            FIREBASE
+//            val database = Firebase.database
+//            val myRef = database.getReference("tareas")
+//            myRef.push().setValue(taskToAdd)
+            database = Firebase.database.reference
+            database.child("Tareas").child("texto").push().setValue(taskToAdd)
 
         } else {
             etTask.setText("")
