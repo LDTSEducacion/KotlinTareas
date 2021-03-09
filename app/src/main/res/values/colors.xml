@@ -13,4 +13,6 @@
     <color name="Boton">#097BD1</color>
     <color name="eraseTask">#F64646</color>
     <color name="orderTask">#458E48</color>
+    <color name="firebase">#EA9F1F</color>
+
 </resources>

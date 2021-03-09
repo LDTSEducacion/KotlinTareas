@@ -1,5 +1,6 @@
 package com.example.miprimeraapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     // Button porque la etiqueta de añadir tarea es Button
     lateinit var btnAddTask:Button
     lateinit var btnOrderTasks:Button
+    lateinit var btnReadFirebase:Button
     lateinit var etTask:EditText
     var isOrderDescending: Boolean = true
     // El recyclerView se va a usar para las listas de tareas
@@ -48,6 +50,7 @@ class MainActivity : AppCompatActivity() {
     private fun initRecyclerView() {
 
         // Configura el RecyclerView y le añade el adapter
+        tasks = prefs.getTasks()
         rvTasks.layoutManager = LinearLayoutManager(this)
         adapter = TaskAdapter(tasks) {deleteTask(it)}
         rvTasks.adapter = adapter
@@ -71,33 +74,38 @@ class MainActivity : AppCompatActivity() {
             orderTasks()
         }
 
-        val getData = object : ValueEventListener {
-
-            override fun onCancelled(databaseError: DatabaseError) {
-
-            }
-
-            override fun onDataChange(snapshot: DataSnapshot) {
-                //var sb:StringBuilder = StringBuilder()
-                for (i in snapshot.children) {
-                    var txt = i.child("texto").getValue().toString()
-                    //sb.append("${i.key} $txt")
-                    tasks.add(txt)
-                }
-            }
+        btnReadFirebase.setOnClickListener {
+            val intent = Intent(this, ReadFirebaseActivity::class.java)
+            startActivity(intent)
         }
-        database.addValueEventListener(getData)
-        database.addListenerForSingleValueEvent(getData)
+
+//        val getData = object : ValueEventListener {
+//
+//            override fun onCancelled(databaseError: DatabaseError) {
+//
+//            }
+//
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                //var sb:StringBuilder = StringBuilder()
+//                for (i in snapshot.children) {
+//                    var txt = i.child("texto").getValue().toString()
+//                    //sb.append("${i.key} $txt")
+//                    tasks.add(txt)
+//                }
+//            }
+//        }
+//        database.addValueEventListener(getData)
+//        database.addListenerForSingleValueEvent(getData)
     }
 
     private fun addTask() {
         val taskToAdd:String = etTask.text.toString()
         
         if ((taskToAdd.length > 0 && taskToAdd.length <= 28)) {
-//            tasks.add(taskToAdd)
-//            adapter.notifyDataSetChanged()
-//            etTask.setText("")
-//            prefs.saveTasks(tasks)
+            tasks.add(taskToAdd)
+            adapter.notifyDataSetChanged()
+            etTask.setText("")
+            prefs.saveTasks(tasks)
 
 //            FIREBASE
 //            val database = Firebase.database
@@ -128,10 +136,16 @@ class MainActivity : AppCompatActivity() {
         // Conectamos las vistas
         btnAddTask = findViewById(R.id.btnAddTask)
         btnOrderTasks = findViewById(R.id.btnOrderTask)
+        btnReadFirebase = findViewById(R.id.btnGoReadFirebaseView)
         etTask = findViewById(R.id.etTask)
         rvTasks = findViewById(R.id.rvTasks)
     }
 
+
+
+
+
+    // Cosas de prueba
     // -----------------------------------------------------
     /*fun test() {
         // val nombre:Boolean = true
