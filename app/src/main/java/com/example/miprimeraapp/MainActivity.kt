@@ -3,17 +3,18 @@ package com.example.miprimeraapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.miprimeraapp.TaskApplication.Companion.prefs
 import com.google.firebase.database.*
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
-import kotlin.text.StringBuilder
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,13 +31,13 @@ class MainActivity : AppCompatActivity() {
     var tasks = mutableListOf<String>()
 
     // FIREBASE
-    private lateinit var database: DatabaseReference
+    private lateinit var database: FirebaseDatabase
+    private lateinit var reference: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initUi()
-        //test("Pablo")
     }
 
     private fun initUi() {
@@ -75,30 +76,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnReadFirebase.setOnClickListener {
-            val intent = Intent(this, ReadFirebaseActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(applicationContext, ReadFirebaseActivity::class.java))
         }
-
-//        val getData = object : ValueEventListener {
-//
-//            override fun onCancelled(databaseError: DatabaseError) {
-//
-//            }
-//
-//            override fun onDataChange(snapshot: DataSnapshot) {
-//                //var sb:StringBuilder = StringBuilder()
-//                for (i in snapshot.children) {
-//                    var txt = i.child("texto").getValue().toString()
-//                    //sb.append("${i.key} $txt")
-//                    tasks.add(txt)
-//                }
-//            }
-//        }
-//        database.addValueEventListener(getData)
-//        database.addListenerForSingleValueEvent(getData)
     }
 
     private fun addTask() {
+
         val taskToAdd:String = etTask.text.toString()
         
         if ((taskToAdd.length > 0 && taskToAdd.length <= 28)) {
@@ -107,15 +90,18 @@ class MainActivity : AppCompatActivity() {
             etTask.setText("")
             prefs.saveTasks(tasks)
 
-//            FIREBASE
-//            val database = Firebase.database
-//            val myRef = database.getReference("tareas")
-//            myRef.push().setValue(taskToAdd)
-            database = Firebase.database.reference
-            database.child("Tareas").child("texto").push().setValue(taskToAdd)
+            // FIREBASE
+
+            var sdf = SimpleDateFormat("dd/MM/yyy HH:mm:ss")
+            var fecha = sdf.format(Date()).toString()
+
+            var id = reference.push().key
+            var model = TaskFirebaseModel(taskToAdd, fecha)
+
+            reference.child(id!!).setValue(model)
 
         } else {
-            etTask.setText("")
+            Toast.makeText(applicationContext, "Campo requerido", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -139,13 +125,17 @@ class MainActivity : AppCompatActivity() {
         btnReadFirebase = findViewById(R.id.btnGoReadFirebaseView)
         etTask = findViewById(R.id.etTask)
         rvTasks = findViewById(R.id.rvTasks)
+
+        // FIREBASE
+        database = FirebaseDatabase.getInstance()
+        reference = database.getReference("Tareas")
     }
 
 
 
 
 
-    // Cosas de prueba
+    // COSAS DE PRUEBA
     // -----------------------------------------------------
     /*fun test() {
         // val nombre:Boolean = true

@@ -52,3 +52,7 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+// Añadido para var texto = itemView.tv_texto en el adapter
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
